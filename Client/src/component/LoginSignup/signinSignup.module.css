@@ -10,15 +10,7 @@
   gap: 20px;
   width: 100%;
 }
-.googlebtn {
-  background-color: #374151;
-  color: #ecf1f9;
-  width: 100%;
-  padding: 10px 20px;
-  outline: none;
-  border: none;
-  cursor: pointer;
-}
+
 .userBtn button {
   padding: 10px;
   font-size: 15px;
@@ -29,7 +21,8 @@ button {
   outline: none;
 }
 .btncolor {
-  background-color: #4690e5;
+  background-color: #1f9385;
+  color: #ecf1f9;
 }
 .container {
   padding: 20px;
@@ -54,7 +47,7 @@ button {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   width: 100%;
-  max-width: 500px; /* Prevents the form from stretching too wide */
+  min-width: 380px; /* Prevents the form from stretching too wide */
 }
 
 /* Styles individual form rows */
@@ -82,7 +75,8 @@ button {
 }
 
 .signupCon input:focus {
-  border-color: #4690e5; /* Highlights the active input field */
+  /* border-color: #4690e5; Highlights the active input field */
+  border-color: #055E54;
 }
 
 /* Wrapper for password input and eye icon */
@@ -127,7 +121,8 @@ button {
 }
 
 .submitbtn {
-  background-color: #4690e5;
+  /* background-color: #4690e5; */
+  background-color: #1f9385;
   color: #ecf1f9;
   width: 100%;
   padding: 10px;
@@ -137,7 +132,8 @@ button {
   cursor: pointer;
 }
 .submitbtn:hover {
-  background-color: #2276d7;
+  /* background-color: #4690e5; */
+  background-color: #15766b;
 }
 
 .error {
@@ -149,12 +145,15 @@ button {
   border-radius: 10px;
 }
 
-@media screen and (max-width: 600px) {
-  .container{
+@media screen and (max-width: 500px) {
+  .container {
     width: 100vw;
   }
   .signupCon input {
     padding: 8px;
     font-size: 14px;
+  }
+  .signupCon {
+    min-width: 90vw; /* Prevents the form from stretching too wide */
   }
 }

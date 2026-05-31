@@ -1,0 +1,41 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: 60px;
+  background: #075e54;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+ 
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+ 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+ 
+.username {
+  font-size: 14px;
+  opacity: 0.85;
+}
+ 
+.logoutBtn {
+  padding: 8px 16px;
+  background: #128c7e;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+ 
+.logoutBtn:hover {
+  background: #0a6b5e;
+}

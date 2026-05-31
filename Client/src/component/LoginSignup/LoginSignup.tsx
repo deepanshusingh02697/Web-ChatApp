@@ -65,7 +65,6 @@ export default function LoginSignup() {
         toast(response?.data?.signUp?.alert, {
           position: "top-right",
           type: "success",
-          theme: "colored",
         });
         setSignUpInput({
           username: "",
@@ -115,11 +114,12 @@ export default function LoginSignup() {
         });
         return;
       }
-      if (response?.data?.logIn?.success) {
-        toast(response?.data?.logIn?.alert, {
+      console.log("response is : ",response);
+      
+      if (response?.data?.logIn) {
+        toast("Login successfully",{
           position: "top-right",
           type: "success",
-          theme: "colored",
         });
         navigate("/");
         setLoginInput({

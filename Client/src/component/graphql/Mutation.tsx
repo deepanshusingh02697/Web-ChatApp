@@ -3,8 +3,6 @@ import { gql } from "@apollo/client";
 export const SIGN_UP_MUTATION = gql`
   mutation SignUp($username: String!, $email: String!, $password: String!) {
     signUp(username: $username, email: $email, password: $password) {
-      alert
-      success
       user {
         email
         isOnline
@@ -18,8 +16,6 @@ export const SIGN_UP_MUTATION = gql`
 export const LOG_IN_MUTATION = gql`
   mutation Mutation($email: String!, $password: String!) {
     logIn(email: $email, password: $password) {
-      alert
-      success
       user {
         email
         lastSeen

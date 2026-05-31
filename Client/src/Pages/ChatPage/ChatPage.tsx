@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client/react";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client/react";
 import {
   LogOut_MUTATION,
   SEND_MESSAGE_MUTATION,
@@ -18,61 +18,117 @@ import type {
   getmessageType,
   sentMessageType,
 } from "../../component/graphql/client";
+import Header from "../../component/Header/Header";
+import styles from "./ChatPage.module.css";
+import { BsChatText } from "react-icons/bs";
+import { IoSend } from "react-icons/io5";
 
 export default function ChatPage() {
+  const client = useApolloClient();
   const [textinput, setTextinput] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<any>(null);
-
   const bottomRef = useRef<HTMLDivElement>(null);
-
+  const [messages, setMessages] = useState<any[]>([]);
   const navigate = useNavigate();
 
   const [logoutUser] = useMutation(LogOut_MUTATION, {
     refetchQueries: [{ query: GET_AUTHENTIC_USER_QUERY }],
   });
+
   const handleLogout = async () => {
     await logoutUser();
+    //clear cache to protected so protected route redirect
+    await client.clearStore();
     navigate("/register");
-    toast("logout successfylly", {
+    toast("Logged out successfully", {
       position: "top-right",
       type: "success",
     });
   };
 
-  const { data, loading, refetch } = useQuery<getmessageType>(
-    GET_MESSSAGES_QUERY,
-    {
-      variables: { receiverId: selectedUserId?.id },
-      skip: !selectedUserId, //it will not fetch until user selected
-    },
+  const { data, loading } = useQuery<getmessageType>(GET_MESSSAGES_QUERY, {
+    variables: { receiverId: selectedUserId?.id },
+    skip: !selectedUserId,
+  });
+
+  useEffect(() => {
+    if (data?.getMessages) {
+      setMessages(data.getMessages);
+    }
+  }, [data]);
+  const { data: allUsers } = useQuery<getAllUserType>(GET_ALL_USER_QUERY);
+  const { data: curUser } = useQuery<getAuthenticUserType>(
+    GET_AUTHENTIC_USER_QUERY,
   );
 
-  console.log("data is : ", data);
-
-  const { data: allUsers } = useQuery<getAllUserType>(GET_ALL_USER_QUERY);
-
-  console.log("current authentic user : ", allUsers?.getUsers);
-
-  const handleNewMessage = useCallback(() => {
-    refetch();
-  }, [refetch]);
+  const currentUserId = curUser?.currentUser?.user?.id;
 
   useEffect(() => {
     if (!socket.connected) {
       socket.connect();
     }
     socket.on("connect", () => {
-      console.log("socekt id: ", socket.id);
+      console.log("socket : ", socket.id);
     });
-    socket.on("newMessage", (message) => {
-      console.log("New message received : ", message);
-      handleNewMessage();
+    socket.on("newMessage", (newMessage) => {
+      console.log("received : ", newMessage);
+      setMessages((prev) => [...prev, newMessage]);
     });
     return () => {
+      socket.off("connect");
       socket.off("newMessage");
-      socket.disconnect();
     };
-  }, [handleNewMessage]);
+  }, []);
+
+  //when user switch clear messages
+  useEffect(() => {
+    setMessages([]);
+  }, [selectedUserId]);
+
+  /*   const selectedUserIdRef = useRef<any>(null);
+  const currentUserIdRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    selectedUserIdRef.current = selectedUserId;
+  }, [selectedUserId]);
+
+  useEffect(() => {
+    currentUserIdRef.current = currentUserId ?? null;
+  }, [curUser]);
+
+  useEffect(() => {
+    if (!socket.connected) socket.connect();
+
+    socket.on("connect", () => {
+      console.log("socket id:", socket.id);
+      if (selectedUserIdRef.current && currentUserId) {
+        const roomId = [currentUserId, selectedUserIdRef.current.id]
+          .sort()
+          .join("-");
+        console.log("rejoining room ", roomId);
+        socket.emit("joinRoom", roomId);
+      }
+    });
+
+    socket.on("newMessage", (newMessage) => {
+      client.cache.updateQuery<getmessageType>(
+        {
+          query: GET_MESSSAGES_QUERY,
+          variables: { receiverId: selectedUserId?.id },
+        },
+        (existing) => {
+          if (!existing) return existing;
+          return {
+            getMessages: [...existing.getMessages, newMessage],
+          };
+        },
+      );
+    });
+    return () => {
+      socket.off("connect");
+      socket.off("newMessage");
+    };
+  }, [client]); */
 
   const [sendMessage] = useMutation<sentMessageType>(SEND_MESSAGE_MUTATION);
 
@@ -85,7 +141,7 @@ export default function ChatPage() {
       },
     });
     if (!response) {
-      toast("Invalid credentials! login again ", {
+      toast("Something went wrong!", {
         position: "top-right",
         type: "warning",
       });
@@ -94,120 +150,133 @@ export default function ChatPage() {
     setTextinput("");
   };
 
-  const { data: curUser } = useQuery<getAuthenticUserType>(
-    GET_AUTHENTIC_USER_QUERY,
-  );
-  console.log(" curUser ", curUser);
-
   const handleSelectedUser = (user: any) => {
-    // console.log("user data is ", user);
-    // console.log(
-    //   "current authentic user in frontend : ",
-    //   curUser?.currentUser?.user
-    // );
-
     setSelectedUserId(user);
-    //join the room for private message
-    const roomId = [curUser?.currentUser?.user?.id, user.id].sort().join("-");
-    console.log("make room id in client side and room id is : ", roomId);
+    const roomId = [currentUserId, user.id].sort().join("-");
+    console.log("room id:", roomId);
     socket.emit("joinRoom", roomId);
   };
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [data]);
-  if (loading) return <p>Loading...</p>;
+  }, [messages]);
 
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "10px 30px",
-          borderBottom: "2px solid black",
-        }}
-      >
-        <div>Chat Page</div>
-        <button
-          onClick={handleLogout}
-          style={{ padding: "10px 20px", fontSize: "18px" }}
-        >
-          Logout
-        </button>
-      </div>
-      <br />
-      <div style={{ display: "flex", gap: "30px" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-            width: "300px",
-            borderRight: "2px solid black",
-          }}
-        >
-          {allUsers?.getUsers.map((user) => {
-            return (
-              <>
+    <div className={styles.container}>
+      <Header
+        username={curUser?.currentUser?.user?.username ?? ""}
+        onLogout={handleLogout}
+      />
+
+      <div className={styles.body}>
+        <div className={styles.sidebar}>
+          <div className={styles.sidebarTitle}>Contacts</div>
+          {allUsers?.getUsers.map((user) => (
+            <div
+              key={user.id}
+              onClick={() => handleSelectedUser(user)}
+              className={`${styles.userItem} ${
+                selectedUserId?.id === user.id ? styles.userItemActive : ""
+              }`}
+            >
+              <div className={styles.avatar}>
+                {user.username?.charAt(0).toUpperCase()}
+              </div>
+              <div className={styles.userInfo}>
+                <div className={styles.userName}>{user.username}</div>
                 <div
-                  key={user.id}
-                  onClick={() => handleSelectedUser(user)}
-                  style={{ background: "gray", cursor: "pointer" }}
+                  className={`${styles.userStatus} ${
+                    user.isOnline ? styles.statusOnline : styles.statusOffline
+                  }`}
                 >
-                  <span>{!user.isOnline ? "offline" : "online"}</span>
-                  <span style={{ padding: "10px 20px" }}>{user.username}</span>
-                  <div style={{ fontSize: "12px" }}>{user.createdAt}</div>
+                  {user.isOnline ? "Online" : "Offline"}
                 </div>
-              </>
-            );
-          })}
+              </div>
+            </div>
+          ))}
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            height: "90vh",
-            flex: 1,
-          }}
-        >
-          <div style={{ flex: 1, overflow: "auto", padding: "1rem" }}>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              {data?.getMessages.map((msg) => {
-                return <div key={msg.id}>{msg.text}</div>;
-              })}
-              <div ref={bottomRef} />
+
+        <div className={styles.chatArea}>
+          {selectedUserId ? (
+            <>
+              <div className={styles.chatHeader}>
+                <div className={styles.chatAvatar}>
+                  {selectedUserId?.username?.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className={styles.chatUsername}>
+                    {selectedUserId?.username}
+                  </div>
+                  <div className={styles.chatUserStatus}>
+                    {selectedUserId?.isOnline ? "Online" : "Offline"}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.messages}>
+                {loading && (
+                  <div className={styles.loadingText}>Loading messages...</div>
+                )}
+
+                {/* {data?.getMessages.map((msg) => { */}
+                {messages.map((msg) => {
+                  const isMe = Number(msg.senderId) === currentUserId;
+                  return (
+                    <div
+                      key={msg.id}
+                      className={`${styles.messageRow} ${
+                        isMe ? styles.messageRowMe : styles.messageRowOther
+                      }`}
+                    >
+                      <div
+                        className={`${styles.bubble} ${
+                          isMe ? styles.bubbleMe : styles.bubbleOther
+                        }`}
+                      >
+                        {!isMe && (
+                          <div className={styles.senderName}>
+                            {msg.sender?.username}
+                          </div>
+                        )}
+                        {msg.text}
+                        <div className={styles.messageTime}>
+                          {new Date(msg.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+                <div ref={bottomRef} />
+              </div>
+              <div className={styles.inputBar}>
+                <input
+                  type="text"
+                  value={textinput}
+                  onChange={(e) => setTextinput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                  placeholder="Type a message..."
+                  className={styles.input}
+                />
+                <button onClick={handleSendMessage} className={styles.sendBtn}>
+                  <IoSend />
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>
+                <BsChatText />
+              </div>
+              <div className={styles.emptyTitle}>Welcome to ChatApp</div>
+              <div className={styles.emptySubtitle}>
+                Select a contact to start chatting
+              </div>
             </div>
-          </div>
-          <div style={{ display: "grid", placeItems: "center" }}>
-            <div
-              style={{
-                display: "flex",
-                padding: "1rem",
-                gap: "0.5rem",
-                width: "80%",
-                alignItems: "center",
-              }}
-            >
-              <input
-                type="text"
-                value={textinput}
-                onChange={(e) => setTextinput(e.target.value)}
-                placeholder="Type a message..."
-                style={{ flex: 1, padding: "0.5rem" }}
-                onKeyDown={(e) => e.key === "Enter" && handleSendMessage}
-              />
-              <button
-                onClick={handleSendMessage}
-                style={{ padding: "10px 15px" }}
-              >
-                Send
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
