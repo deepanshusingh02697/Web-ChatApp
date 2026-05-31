@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import { signToken } from "../../lib/jwt";
-import { context } from "../context";
+import { context, twoUserRoomId } from "../context";
 // import { PubSub } from "graphql-subscriptions";
 
 // const pubsub=new PubSub()
@@ -9,33 +9,64 @@ import { context } from "../context";
 
 export const resolvers = {
   Query: {
-    currentUser: (_parent: unknown, _args: unknown, ctx: context) => {
+    currentUser: async (_parent: unknown, _args: unknown, ctx: context) => {
       if (!ctx.userId) {
         throw new Error("Not authenticated for get CurUser - login first");
       }
-      const curUser = prisma.user.findUnique({
+      const curUser = await prisma.user.findUnique({
         where: { id: ctx.userId },
       });
+      console.log("user user is : ", curUser);
+
       if (!curUser) {
         throw new Error("User not found");
       }
-      console.log("curent user ");
-      return {
-        user: curUser,
-        success: true,
-        alert: "current user getSuccessfully",
-      };
+      return { user: curUser };
     },
-    getMessages: async (_parent: unknown, _args: unknown, ctx: context) => {
+    getMessages: async (
+      _parent: unknown,
+      args: { receiverId: number },
+      ctx: context,
+    ) => {
       try {
-        return await prisma.message.findMany({
+        //send all messages
+        /* return await prisma.message.findMany({
           include: { sender: true },
+          orderBy: { createdAt: "asc" },
+        }); */
+
+        //send Individual messages
+        console.log(
+          "ctx.userid ",
+          ctx.userId,
+          "args.receiverId : ",
+          args.receiverId,
+        );
+
+        return await prisma.message.findMany({
+          where: {
+            OR: [
+              { senderId: Number(ctx.userId), receiverId: args.receiverId },
+              { senderId: args.receiverId, receiverId: Number(ctx.userId) },
+            ],
+          },
+          include: { sender: true, receiver: true },
           orderBy: { createdAt: "asc" },
         });
       } catch (error) {
         console.log("get message errors : ", error);
         throw new Error("Failed to fetch messages");
       }
+    },
+    getUsers: async (_parent: unknown, _args: unknown, ctx: context) => {
+      if (!ctx.userId) {
+        throw new Error("Not authenticated to get all Users - login first");
+      }
+      return await prisma.user.findMany({
+        where: {
+          id: { not: ctx.userId },
+        },
+      });
     },
   },
   Mutation: {
@@ -157,7 +188,7 @@ export const resolvers = {
 
     sendMessage: async (
       _parent: unknown,
-      args: { text: string },
+      args: { text: string; receiverId: number },
       ctx: context,
     ) => {
       if (!ctx.userId) {
@@ -167,18 +198,19 @@ export const resolvers = {
         data: {
           text: args.text,
           senderId: ctx.userId,
+          receiverId: args.receiverId,
         },
         include: { sender: true },
       });
       console.log("message is: ", message);
 
-      // publish: now notify all subscribers means publish event to the client
-      // pubsub.publish(MESSAGE_SENT,{messageSent:message})
+      /*       emit or notify to all connected clients
+      ctx.io.emit("newMessage", message); */
 
-      //emit or notify to all connected clients
-      ctx.io.emit("newMessage", message);
-
-      return { message, alert: "message sent successfylly" };
+      //make room so that user can chat privately by taking the id of sender and receiver
+      const roomId = twoUserRoomId<number>(ctx.userId, args.receiverId);
+      ctx.io.to(roomId).emit("newRoomMessage", message);
+      return { message };
     },
   },
 

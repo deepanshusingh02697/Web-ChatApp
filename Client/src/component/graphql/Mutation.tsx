@@ -37,16 +37,16 @@ export const LogOut_MUTATION = gql`
   }
 `;
 
-
-export const SEND_MESSAGE_MUTATION=gql`
-mutation Mutation($text: String!) {
-  sendMessage(text: $text) {
-    alert
-    message {
-      id
-      senderId
-      text
+export const SEND_MESSAGE_MUTATION = gql`
+  mutation Mutation($text: String!, $receiverId: Int!) {
+    sendMessage(text: $text, receiverId: $receiverId) {
+      message {
+        receiverId
+        senderId
+        id
+        text
+        createdAt
+      }
     }
   }
-}
-`
+`;

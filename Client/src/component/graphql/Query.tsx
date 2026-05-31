@@ -1,26 +1,49 @@
 import { gql } from "@apollo/client";
 
-export const GET_CURRENT_USER_QUERY = gql`
+export const GET_AUTHENTIC_USER_QUERY = gql`
   query Query {
     currentUser {
-      alert
-      success
       user {
+        id
         email
-        username
-        isOnline
+        # isOnline
+        # lastSeen
+        # username
+        # createdAt
       }
     }
   }
 `;
 
 export const GET_MESSSAGES_QUERY = gql`
-  query Query {
-    getMessages {
+  # query Query {
+  #   getMessages {
+  #     createdAt
+  #     id
+  #     senderId
+  #     text
+  #   }
+  # }
+  query Query($receiverId: Int!) {
+    getMessages(receiverId: $receiverId) {
       createdAt
       id
+      receiverId
       senderId
       text
+    }
+  }
+`;
+
+export const GET_ALL_USER_QUERY = gql`
+  query Query {
+    getUsers {
+      createdAt
+      email
+      id
+      isOnline
+      username
+      lastSeen
     }
   }
 `;

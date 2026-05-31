@@ -11,30 +11,31 @@ type User{
 }
 type AuthPayload{
     user:User!
-    success:Boolean
-    alert:String
 }
 
 type Message{
     id:Int
     text:String
     createdAt:String
-    senderId:String
+
+    senderId:Int
+    receiverId:Int
 }
 type MessagePayload{
     message:Message!
-    alert:String
 }
 
 type Query{
     currentUser:AuthPayload!
-    getMessages:[Message] #return array of message objects
+    getMessages(receiverId:Int!):[Message] #return array of message objects
+    getUsers:[User]# to show all users to individual in sidebar
 }
 type Mutation{
     signUp(username:String!,email:String!,password:String!):AuthPayload!
     logIn(email:String!,password:String!):AuthPayload!
     logOut:Boolean!
 
-    sendMessage(text:String!):MessagePayload!
+    sendMessage(text:String!,receiverId:Int!):MessagePayload!
+    # receiveMessage(text:String!):MessagePayload!
 }
 `;

@@ -13,14 +13,16 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  username  String    @unique
-  email     String    @unique
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
   password  String
-  isOnline  Boolean   @default(false)
-  lastSeen  DateTime  @default(now())
-  createdAt DateTime  @default(now())
-  messages  Message[]
+  isOnline  Boolean  @default(false)
+  lastSeen  DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  sentMessages    Message[] @relation("sentMessages") //specify which belongs to
+  receiveMessages Message[] @relation("receiveMessages")
 }
 
 model Message {
@@ -28,6 +30,9 @@ model Message {
   text      String
   createdAt DateTime @default(now())
 
-  senderId Int
-  sender   User @relation(fields: [senderId], references: [id])
+  senderId   Int
+  receiverId Int
+  
+  sender     User @relation("sentMessages", fields: [senderId], references: [id])
+  receiver   User @relation("receiveMessages", fields: [receiverId], references: [id])
 }

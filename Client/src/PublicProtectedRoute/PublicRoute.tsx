@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client/react";
-import { GET_CURRENT_USER_QUERY } from "../component/graphql/Query";
+import {GET_AUTHENTIC_USER_QUERY } from "../component/graphql/Query";
 import { Navigate } from "react-router-dom";
 
 export default function PublicRoute({
@@ -7,7 +7,7 @@ export default function PublicRoute({
 }: {
   children: React.ReactNode;
 }) {
-  const { data, loading } = useQuery(GET_CURRENT_USER_QUERY);
+  const { data, loading } = useQuery(GET_AUTHENTIC_USER_QUERY);
   console.log("data for routes : ",data);
   
   if (loading) {

@@ -3,7 +3,7 @@ import styles from "./signinSignup.module.css";
 import { useMutation } from "@apollo/client/react";
 import { toast } from "react-toastify";
 import { LOG_IN_MUTATION, SIGN_UP_MUTATION } from "../graphql/Mutation";
-import { GET_CURRENT_USER_QUERY } from "../graphql/Query";
+import { GET_AUTHENTIC_USER_QUERY} from "../graphql/Query";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginSignup() {
@@ -31,7 +31,7 @@ export default function LoginSignup() {
     };
   }
   const [singUpUserMutation] = useMutation<signUpInterface>(SIGN_UP_MUTATION, {
-    refetchQueries: [{ query: GET_CURRENT_USER_QUERY }],
+    refetchQueries: [{ query: GET_AUTHENTIC_USER_QUERY }],
   });
 
   /* Signup */
