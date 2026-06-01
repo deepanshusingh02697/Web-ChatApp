@@ -10,7 +10,7 @@ import {
   GET_AUTHENTIC_USER_QUERY,
   GET_MESSSAGES_QUERY,
 } from "../../component/graphql/Query";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { socket } from "../../Socket";
 import type {
   getAllUserType,
@@ -28,7 +28,7 @@ export default function ChatPage() {
   const [textinput, setTextinput] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<any>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  // const [messages, setMessages] = useState<any[]>([]);
   const navigate = useNavigate();
 
   const [logoutUser] = useMutation(LogOut_MUTATION, {
@@ -46,22 +46,26 @@ export default function ChatPage() {
     });
   };
 
-  const { data, loading } = useQuery<getmessageType>(GET_MESSSAGES_QUERY, {
+  const { data, loading,refetch} = useQuery<getmessageType>(GET_MESSSAGES_QUERY, {
     variables: { receiverId: selectedUserId?.id },
     skip: !selectedUserId,
   });
 
-  useEffect(() => {
-    if (data?.getMessages) {
-      setMessages(data.getMessages);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data?.getMessages) {
+  //     setMessages(data.getMessages);
+  //   }
+  // }, [data]);
   const { data: allUsers } = useQuery<getAllUserType>(GET_ALL_USER_QUERY);
   const { data: curUser } = useQuery<getAuthenticUserType>(
     GET_AUTHENTIC_USER_QUERY,
   );
 
   const currentUserId = curUser?.currentUser?.user?.id;
+
+   const handleNewMessage = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   useEffect(() => {
     if (!socket.connected) {
@@ -72,18 +76,20 @@ export default function ChatPage() {
     });
     socket.on("newRoomMessage", (newMessage) => {
       console.log("received : ", newMessage);
-      setMessages((prev) => [...prev, newMessage]);
+      // setMessages((prev) => [...prev, newMessage]);
+      handleNewMessage()
       setTextinput("");
     });
     return () => {
       socket.off("connect");
       socket.off("newRoomMessage");
+      socket.disconnect()
     };
-  }, []);
+  }, [handleNewMessage]);
 
   //when user switch clear messages
   useEffect(() => {
-    setMessages([]);
+    // setMessages([]);
   }, [selectedUserId]);
 
 
@@ -115,7 +121,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [data]);
 
   return (
     <div className={styles.container}>
@@ -173,8 +179,8 @@ export default function ChatPage() {
                   <div className={styles.loadingText}>Loading messages...</div>
                 )}
 
-                {/* {data?.getMessages.map((msg) => { */}
-                {messages.map((msg) => {
+                {data?.getMessages.map((msg) => {
+                {/* {messages.map((msg) => { */}
                   const isMe = Number(msg.senderId) === currentUserId;
                   return (
                     <div

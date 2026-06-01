@@ -247,8 +247,7 @@
 .emptyTitle {
   font-size: 22px;
   font-weight: bold;
-  /* color: #075e54; */
-  color: #4690e5;
+  color: #075e54;
 }
 
 .emptySubtitle {
@@ -266,10 +265,6 @@
     height: 25px;
     font-size: 14px;
   }
-  /* .inputBar {
-    position: fixed;
-    bottom: 0;
-  } */
   .chatArea {
     min-width: 70vw;
   }
