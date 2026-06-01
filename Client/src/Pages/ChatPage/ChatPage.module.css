@@ -27,7 +27,8 @@
   font-weight: bold;
   font-size: 16px;
   border-bottom: 1px solid #e0e0e0;
-  color: #075e54;
+  /* color: #075e54; */
+  color: #4690e5;
 }
 
 .userItem {
@@ -53,7 +54,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #128c7e;
+  /* background: #128c7e; */
+  background: #4690e5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,7 +97,8 @@
 
 .chatHeader {
   padding: 12px 20px;
-  background: #075e54;
+  /* background: #075e54; */
+  background: #4690e5;
   color: white;
   display: flex;
   align-items: center;
@@ -106,7 +109,8 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #25d366;
+  /* background: #25d366; */
+  background: #1d59a7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -208,7 +212,8 @@
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: #075e54;
+  /* background: #075e54; */
+  background: #4690e5;
   color: white;
   border: none;
   cursor: pointer;
@@ -220,7 +225,8 @@
 }
 
 .sendBtn:hover {
-  background: #064c43;
+  /* background: #064c43; */
+  background: #2c62a0;
 }
 
 .emptyState {
@@ -241,7 +247,8 @@
 .emptyTitle {
   font-size: 22px;
   font-weight: bold;
-  color: #075e54;
+  /* color: #075e54; */
+  color: #4690e5;
 }
 
 .emptySubtitle {

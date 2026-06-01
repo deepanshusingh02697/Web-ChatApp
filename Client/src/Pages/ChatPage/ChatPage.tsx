@@ -70,13 +70,14 @@ export default function ChatPage() {
     socket.on("connect", () => {
       console.log("socket : ", socket.id);
     });
-    socket.on("newMessage", (newMessage) => {
+    socket.on("newRoomMessage", (newMessage) => {
       console.log("received : ", newMessage);
       setMessages((prev) => [...prev, newMessage]);
+      setTextinput("");
     });
     return () => {
       socket.off("connect");
-      socket.off("newMessage");
+      socket.off("newRoomMessage");
     };
   }, []);
 
@@ -85,50 +86,6 @@ export default function ChatPage() {
     setMessages([]);
   }, [selectedUserId]);
 
-  /*   const selectedUserIdRef = useRef<any>(null);
-  const currentUserIdRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    selectedUserIdRef.current = selectedUserId;
-  }, [selectedUserId]);
-
-  useEffect(() => {
-    currentUserIdRef.current = currentUserId ?? null;
-  }, [curUser]);
-
-  useEffect(() => {
-    if (!socket.connected) socket.connect();
-
-    socket.on("connect", () => {
-      console.log("socket id:", socket.id);
-      if (selectedUserIdRef.current && currentUserId) {
-        const roomId = [currentUserId, selectedUserIdRef.current.id]
-          .sort()
-          .join("-");
-        console.log("rejoining room ", roomId);
-        socket.emit("joinRoom", roomId);
-      }
-    });
-
-    socket.on("newMessage", (newMessage) => {
-      client.cache.updateQuery<getmessageType>(
-        {
-          query: GET_MESSSAGES_QUERY,
-          variables: { receiverId: selectedUserId?.id },
-        },
-        (existing) => {
-          if (!existing) return existing;
-          return {
-            getMessages: [...existing.getMessages, newMessage],
-          };
-        },
-      );
-    });
-    return () => {
-      socket.off("connect");
-      socket.off("newMessage");
-    };
-  }, [client]); */
 
   const [sendMessage] = useMutation<sentMessageType>(SEND_MESSAGE_MUTATION);
 
@@ -147,7 +104,6 @@ export default function ChatPage() {
       });
       return;
     }
-    setTextinput("");
   };
 
   const handleSelectedUser = (user: any) => {
@@ -232,17 +188,18 @@ export default function ChatPage() {
                           isMe ? styles.bubbleMe : styles.bubbleOther
                         }`}
                       >
-                        {!isMe && (
+                        {/* {!isMe && (
                           <div className={styles.senderName}>
                             {msg.sender?.username}
                           </div>
-                        )}
+                        )} */}
                         {msg.text}
                         <div className={styles.messageTime}>
-                          {new Date(msg.createdAt).toLocaleTimeString([], {
+                          {/* {new Date(msg.createdAt).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
-                          })}
+                          })} */}
+                          Date
                         </div>
                       </div>
                     </div>

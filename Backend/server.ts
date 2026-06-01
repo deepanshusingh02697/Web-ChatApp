@@ -42,8 +42,9 @@ const server = new ApolloServer({
 await server.start();
 
 /* Sockets event */
-io.on("connect", (socket) => {
-  console.log("Client connected : ", socket.id);
+io.on("connection", (socket) => {
+  console.log("User connected");
+  console.log("Socket Id : ", socket.id);
 
   socket.on("joinRoom", (roomId: string) => {
     socket.join(roomId);
