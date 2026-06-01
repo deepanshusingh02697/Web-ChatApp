@@ -10,7 +10,7 @@ import {
   GET_AUTHENTIC_USER_QUERY,
   GET_MESSSAGES_QUERY,
 } from "../../component/graphql/Query";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { socket } from "../../Socket";
 import type {
   getAllUserType,
