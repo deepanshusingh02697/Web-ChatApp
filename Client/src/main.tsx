@@ -9,7 +9,8 @@ import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4003/graphql",
+  // uri: "http://localhost:4003/graphql",
+  uri:"https://web-chatapp-py6o.onrender.com/graphql",
   credentials: "include",
 });
 const client = new ApolloClient({

@@ -2,13 +2,10 @@ import { useMutation } from "@apollo/client/react";
 import { LogOut_MUTATION } from "../../component/graphql/Mutation";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { GET_CURRENT_USER_QUERY } from "../../component/graphql/Query";
 
 export default function Home() {
   const navigate = useNavigate();
-  const [logoutUser] = useMutation(LogOut_MUTATION, {
-    refetchQueries: [{ query: GET_CURRENT_USER_QUERY }],
-  });
+  const [logoutUser] = useMutation(LogOut_MUTATION);
   const handleLogout = async () => {
     await logoutUser();
     navigate("/register");
