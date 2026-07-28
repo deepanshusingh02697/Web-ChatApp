@@ -1,5 +1,5 @@
-import styles from "./Header.module.css";
 import { BsChatText } from "react-icons/bs";
+import styles from './header.module.css'
 
 interface HeaderProps {
   username: string;
