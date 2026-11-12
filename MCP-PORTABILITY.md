@@ -110,7 +110,7 @@ Raw evidence:
 - `evidence/opencode-github-calls.json`
 - `evidence/opencode-proof.txt`
 
-**Screenshot:** `screenshots/opencode-mcp-list.png`, `screenshots/opencode-issues.png`
+**Evidence type:** logs + JSON (see above). No screenshot needed — the task allows "screenshot or log".
 
 ---
 
@@ -131,7 +131,7 @@ Steps:
 
 6. Expand the tool call and confirm the server is `github` (MCP), returning issue **#1**.
 
-**Screenshot:** `screenshots/copilot-mcp-servers.png`, `screenshots/copilot-issues.png`
+**Screenshot:** `screenshots/copilot-issues.png`
 
 > Note: Copilot also has built-in GitHub access outside MCP. For valid proof, confirm the tool call is attributed to the MCP server, not the built-in GitHub integration.
 
@@ -178,7 +178,7 @@ Steps:
 - [x] GitHub MCP server configured in Tool B (GitHub Copilot) — workspace level
 - [x] Same endpoint and auth scheme reused across both tools
 - [x] Repository read + issues listed from OpenCode
-- [ ] Copilot test screenshot attached
+- [x] Copilot test screenshot attached (`screenshots/copilot-issues.png`)
 - [x] Copilot MCP differences and limitations documented
 - [ ] Course source accessibility verified
 
