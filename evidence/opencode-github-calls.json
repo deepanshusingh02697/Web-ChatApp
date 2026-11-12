@@ -1,0 +1,25 @@
+{
+  "server": "github",
+  "transport": "remote (Streamable HTTP)",
+  "endpoint": "https://api.githubcopilot.com/mcp/",
+  "toolCalls": ["get_me", "list_issues", "list_branches"],
+  "result": {
+    "authenticatedAs": "deepanshusingh02697",
+    "repository": "deepanshusingh02697/Web-ChatApp",
+    "issues": [
+      {
+        "number": 1,
+        "title": "MCP portability test - OpenCode",
+        "state": "OPEN",
+        "created_at": "2026-11-12T05:41:28Z"
+      }
+    ],
+    "branches": [
+      {
+        "name": "main",
+        "sha": "fa20273d2ef0bed74730f36a5b72be87363b8d89",
+        "protected": false
+      }
+    ]
+  }
+}

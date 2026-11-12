@@ -1,0 +1,5 @@
+Copilot runtime log: process-1794464132774-33124.log
+
+2026-11-12T06:25:19.517Z [INFO] [rust:rmcp::service] Service initialized as client {"peer_info":"Some(ServerPeerInfo { protocol_version: ProtocolVersion(\"2025-11-25\"), capabilities: ServerCapabilities { experimental: None, extensions: None, logging: None, completions: Some({}), prompts: Some(Promp
+
+name: \"github-mcp-server\", title: Some(\"GitHub MCP Server\"), version: \"github-mcp-server/remote-c6a98818374f3d44138088a1ca048e2acd935858

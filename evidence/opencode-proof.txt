@@ -1,0 +1,15 @@
+Tool A: OpenCode — GitHub MCP server connection
+Date: 2026-11-12
+Command: opencode mcp list
+Working directory: /Users/deepanshusingh/Documents/Web-ChatApp
+Config: ./opencode.json (project level)
+
+Output:
+✓ github  connected
+
+MCP tool calls executed through the same server:
+- get_me       -> login: deepanshusingh02697
+- list_issues  -> deepanshusingh02697/Web-ChatApp, 1 open issue (#1 "MCP portability test - OpenCode")
+- list_branches-> main @ fa20273d2ef0bed74730f36a5b72be87363b8d89
+
+Issue URL: https://github.com/deepanshusingh02697/Web-ChatApp/issues/1
