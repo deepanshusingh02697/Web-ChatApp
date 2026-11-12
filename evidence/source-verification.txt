@@ -1,0 +1,10 @@
+Source verification — MCP Portability Exercise
+Date: 2026-11-12
+Source: MCP Fundamentals - Tier 1 (Celestial Atlassian wiki)
+URL: https://celestialsys.atlassian.net/wiki/spaces/DA/pages/3860103186/MCP+Fundamentals+-+Tier+1
+
+Status: accessible on the completion date through the Celestial Atlassian SSO
+account. No purchase, subscription, or paywall involved — company-provided
+learning material.
+
+Checked by: Deepanshu Singh

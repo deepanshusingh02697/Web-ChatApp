@@ -164,11 +164,10 @@ Steps:
 
 ## 5. Source verification
 
-- Course/source: `<paste course URL here>`
-- Verified on: 6 November 2026
-- Status: freely accessible, no paywall or login required.
-
-> Replace the placeholder with the actual URL after opening it in a private window to confirm free access.
+- Course/source: **MCP Fundamentals – Tier 1** — https://celestialsys.atlassian.net/wiki/spaces/DA/pages/3860103186/MCP+Fundamentals+-+Tier+1
+- Verified on: 12 November 2026
+- Status: accessible through the Celestial Atlassian (SSO) account; company-provided learning material with no purchase or paywall.
+- Access check: page opened successfully for the signed-in Celestial account on the completion date.
 
 ---
 
@@ -180,7 +179,7 @@ Steps:
 - [x] Repository read + issues listed from OpenCode
 - [x] Copilot test screenshot attached (`screenshots/copilot-issues.png`)
 - [x] Copilot MCP differences and limitations documented
-- [ ] Course source accessibility verified
+- [x] Course source accessibility verified (`evidence/source-verification.txt`)
 
 ## Files
 
@@ -192,4 +191,5 @@ Steps:
 | `evidence/opencode-github-calls.json` | MCP tool results from OpenCode |
 | `evidence/opencode-proof.txt` | OpenCode proof transcript |
 | `evidence/copilot-mcp-init.txt` | Copilot runtime MCP initialization log |
+| `evidence/source-verification.txt` | Course source accessibility confirmation |
 | `screenshots/` | UI screenshots |
